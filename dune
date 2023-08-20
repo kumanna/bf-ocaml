@@ -2,12 +2,22 @@
   (dev
     (flags (:standard -warn-error -A))))
 
+(menhir
+ (modules parser))
+
+(ocamllex lexer)
+
 (library
  (name bfinterpreter)
  (libraries str)
  (modules bfinterpreter))
 
+(library
+ (name bfinterpreter2)
+ (libraries str)
+ (modules bfinterpreter2 parser lexer ast))
+
 (executable
  (name bftest)
- (libraries bfinterpreter alcotest)
+ (libraries bfinterpreter bfinterpreter2 alcotest)
  (modules bftest))
