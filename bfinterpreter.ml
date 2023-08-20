@@ -39,6 +39,26 @@ let decrement_value_at_pointer bfstruct =
 let print_current_value bfstruct =
   Printf.printf "%c" (Bytes.get bfstruct.tape bfstruct.current_position)
 
+let get_current_value bfstruct =
+  Bytes.get bfstruct.tape bfstruct.current_position
+
+let rec skip_to_close_loop bfstruct l =
+  let x = bfstruct.code in
+  let i = bfstruct.code_pos in
+  match x.[i] with
+  | '[' -> skip_to_close_loop { bfstruct with code_pos = bfstruct.code_pos + 1 } (l + 1)
+  | ']' -> if l = 0 then i + 1 else skip_to_close_loop { bfstruct with code_pos = bfstruct.code_pos + 1 } (l - 1)
+  | _ -> skip_to_close_loop { bfstruct with code_pos = bfstruct.code_pos + 1 } l
+
+let rec unskip_to_open_loop bfstruct l =
+  let x = bfstruct.code in
+  let i = bfstruct.code_pos in
+  match x.[i] with
+  | ']' -> unskip_to_open_loop { bfstruct with code_pos = bfstruct.code_pos - 1 } (l + 1)
+  | '[' -> if l = 0 then i else unskip_to_open_loop { bfstruct with code_pos = bfstruct.code_pos - 1 } (l - 1)
+  | _ -> unskip_to_open_loop { bfstruct with code_pos = bfstruct.code_pos - 1 } l
+
+
 let tape_as_string bfstruct =
   String.of_bytes bfstruct.tape
 
@@ -52,6 +72,18 @@ let interpret bfstruct =
       | '>' -> scan { (increment_data_pointer bfstruct) with code_pos = bfstruct.code_pos + 1 }
       | '<' -> scan { (decrement_data_pointer bfstruct) with code_pos = bfstruct.code_pos + 1 }
       | '.' -> print_current_value bfstruct ; scan { bfstruct with code_pos = bfstruct.code_pos + 1 }
+      | '[' ->
+        if (bfstruct |> get_current_value |> int_of_char) <> 0 then
+          scan { bfstruct with code_pos = bfstruct.code_pos + 1  }
+        else
+          scan { bfstruct with
+                 code_pos = skip_to_close_loop { bfstruct with code_pos = bfstruct.code_pos + 1 } 0;
+               }
+      | ']' ->
+        if (bfstruct |> get_current_value |> int_of_char) <> 0 then
+          scan { bfstruct with code_pos = unskip_to_open_loop { bfstruct with code_pos = bfstruct.code_pos - 1 } 0 }
+        else
+          scan { bfstruct with code_pos = bfstruct.code_pos + 1 }
       | _ -> failwith "Unhandled!"
   in
   bfstruct |> scan |> ignore
