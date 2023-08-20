@@ -9,5 +9,5 @@
 
 (executable
  (name bftest)
- (libraries bfinterpreter)
+ (libraries bfinterpreter alcotest)
  (modules bftest))
