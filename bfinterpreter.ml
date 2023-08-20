@@ -37,3 +37,8 @@ let print_current_value bfstruct =
 
 let tape_as_string bfstruct =
   String.of_bytes bfstruct.tape
+
+let interpret bfstruct s =
+  for i = 0 to ((String.length s) - 1) do
+    Printf.printf "%c" s.[i]
+  done
