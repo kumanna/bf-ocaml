@@ -11,7 +11,7 @@ let create (length : int) (code : string) =
   { tape = Bytes.make length (char_of_int 0);
     length = length;
     current_position = 0;
-    code = code;
+    code = Str.global_replace (Str.regexp "[ \n\t]*") "" code;
     code_pos = 0;
     loop_stack = [];
   }
