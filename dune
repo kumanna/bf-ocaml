@@ -1,0 +1,8 @@
+(library
+ (name bfinterpreter)
+ (modules bfinterpreter))
+
+(executable
+ (name bftest)
+ (libraries bfinterpreter)
+ (modules bftest))
