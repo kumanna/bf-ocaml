@@ -11,15 +11,29 @@ let create (length : int) =
   }
 
 let increment_data_pointer bfstruct =
-  { bfstruct with current_position = bfstruct.current_position + 1 }
+  if bfstruct.current_position < bfstruct.length - 1 then
+    { bfstruct with current_position = bfstruct.current_position + 1 }
+  else
+    bfstruct
 
 let decrement_data_pointer bfstruct =
-  { bfstruct with current_position = bfstruct.current_position - 1 }
+  if bfstruct.current_position > 0 then
+    { bfstruct with current_position = bfstruct.current_position - 1 }
+  else
+    bfstruct
 
 let increment_value_at_pointer bfstruct =
   let current_value = Bytes.get bfstruct.tape bfstruct.current_position |> int_of_char in
-  Bytes.set bfstruct.tape bfstruct.current_position (char_of_int (current_value + 1))
+  Bytes.set bfstruct.tape bfstruct.current_position (char_of_int (current_value + 1));
+  bfstruct
 
 let decrement_value_at_pointer bfstruct =
   let current_value = Bytes.get bfstruct.tape bfstruct.current_position |> int_of_char in
-  Bytes.set bfstruct.tape bfstruct.current_position (char_of_int (current_value - 1))
+  Bytes.set bfstruct.tape bfstruct.current_position (char_of_int (current_value - 1));
+  bfstruct
+
+let print_current_value bfstruct =
+  Printf.printf "%c" (Bytes.get bfstruct.tape bfstruct.current_position)
+
+let tape_as_string bfstruct =
+  String.of_bytes bfstruct.tape

@@ -1,2 +1,5 @@
+open Bfinterpreter
+
 let _ =
-  print_endline "Hello world!"
+  let bfinterp = create 100 in
+  print_endline (tape_as_string bfinterp)
