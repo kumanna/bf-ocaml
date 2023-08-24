@@ -19,5 +19,6 @@
 
 (executable
  (name bftest)
+ (public_name bftest)
  (libraries bfinterpreter bfinterpreter2 alcotest)
  (modules bftest))
