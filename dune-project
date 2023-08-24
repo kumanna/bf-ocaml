@@ -11,8 +11,11 @@
  (name bftest)
  (synopsis "Brainfuck interpreter written in OCaml")
  (description "A Brainfuck interpreter written in OCaml. Can use direct parsing as well as Menhir.")
-    (depends
-      (alcotest :with-test)
-        (ocaml
-	   (>= 4.02.3))
-	     dune))
+ (depends
+  (alcotest :with-test)
+  (ocaml
+   (>= 4.02.3))
+  dune
+ (menhir :with-test)
+ (ocaml
+  (>= 4.02.3))))

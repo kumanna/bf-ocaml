@@ -11,6 +11,8 @@ depends: [
   "alcotest" {with-test}
   "ocaml" {>= "4.02.3"}
   "dune" {>= "3.10"}
+  "menhir" {with-test}
+  "ocaml" {>= "4.02.3"}
   "odoc" {with-doc}
 ]
 build: [
